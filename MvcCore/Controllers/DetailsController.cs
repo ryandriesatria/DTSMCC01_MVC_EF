@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MvcCore.Context;
 using MvcCore.Models;
 using System;
@@ -18,13 +19,16 @@ namespace MvcCore.Controllers
         }
         public IActionResult Index()
         {
-            var details = _context.Details.ToList();
+            var details = _context.Details.Include(detail => detail.Products).
+                Include(detail => detail.Masters).ToList(); ;
             return View(details) ;
         }
 
         //GET
         public IActionResult Create()
         {
+            var productId = _context.Products.Select(p => p.Id).ToList();
+            ViewBag.productId = productId;
             return View();
         }
 
@@ -33,6 +37,7 @@ namespace MvcCore.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Details detail)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Details.Add(detail);
