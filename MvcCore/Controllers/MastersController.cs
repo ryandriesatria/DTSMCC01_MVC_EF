@@ -3,26 +3,22 @@ using MvcCore.Context;
 using MvcCore.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MvcCore.Controllers
 {
-
-
-    public class ProductsController : Controller
+    public class MastersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public ProductsController(ApplicationDbContext context)
+        public MastersController(ApplicationDbContext context)
         {
             _context = context;
         }
-        
         public IActionResult Index()
         {
-            var products = _context.Products.ToList();
-            return View(products);
+            var masters = _context.Masters.ToList();
+            return View(masters);
         }
 
         //GET
@@ -34,11 +30,11 @@ namespace MvcCore.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Products product)
+        public IActionResult Create(Masters master)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _context.Products.Add(product);
+                _context.Masters.Add(master);
                 var result = _context.SaveChanges();
                 if (result > 0)
                 {
@@ -52,18 +48,18 @@ namespace MvcCore.Controllers
         //GET
         public IActionResult Edit(int id)
         {
-            var product = _context.Products.Single(p => p.Id == id);
-            return View(product);
+            var master = _context.Masters.Find(id);
+            return View(master);
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Products product)
+        public IActionResult Edit(Masters master)
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Update(product);
+                _context.Masters.Update(master);
                 var result = _context.SaveChanges();
                 if (result > 0)
                 {
@@ -76,18 +72,18 @@ namespace MvcCore.Controllers
         //GET
         public IActionResult Delete(int id)
         {
-            var product = _context.Products.Single(p => p.Id == id);
-            return View(product);
+            var master = _context.Masters.Find(id);
+            return View(master);
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Products product)
+        public IActionResult Delete(Masters master)
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Remove(product);
+                _context.Masters.Remove(master);
                 var result = _context.SaveChanges();
                 if (result > 0)
                 {
@@ -100,10 +96,8 @@ namespace MvcCore.Controllers
         //GET
         public IActionResult Details(int id)
         {
-            var product = _context.Products.Single(p => p.Id == id);
-            return View(product);
+            var master = _context.Masters.Find(id);
+            return View(master);
         }
-
     }
 }
-

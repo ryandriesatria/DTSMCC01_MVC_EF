@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace MvcCore.Models
 {
-    public class Products
+    public class Masters
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int Stock { get; set; }
-        public int Price { get; set; }
+        public DateTime TransactionDate { get; set; }
     }
 }
