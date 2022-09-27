@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Context;
 using WebAPI.Models;
+using WebAPI.Models.ViewModels;
 
 namespace WebAPI.Controllers
 {
@@ -53,9 +54,16 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(Details detail)
+        public IActionResult Post(DetailsViewModel detail)
         {
-            _context.Details.Add(detail);
+
+            
+            _context.Details.Add(new Details { 
+                Id = detail.Id,
+                ProductId = detail.ProductId,
+                MasterId = detail.MasterId,
+                Quantity = detail.Quantity
+            });
             var result = _context.SaveChanges();
             if (result > 0)
             {
