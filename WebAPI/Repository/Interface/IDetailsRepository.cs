@@ -9,8 +9,8 @@ namespace WebAPI.Repository.Interface
 {
     interface IDetailsRepository
     {
-        List<Details> Get();
-        Details Get(int id);
+        List<DetailsViewModel> Get();
+        DetailsViewModel Get(int id);
         int Post(DetailsViewModel detail);
         int Put(int id, DetailsViewModel detail);
         int Delete(int id);

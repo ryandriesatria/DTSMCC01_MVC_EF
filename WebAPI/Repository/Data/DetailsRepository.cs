@@ -25,16 +25,29 @@ namespace WebAPI.Repository.Data
             return result;
         }
 
-        public List<Details> Get()
+        public List<DetailsViewModel> Get()
         {
-            var data = _context.Details.ToList();
+            var data = _context.Details.Select(x => new DetailsViewModel
+            {
+                Id = x.Id,
+                ProductId = x.ProductId,
+                MasterId = x.MasterId,
+                Quantity = x.Quantity
+            }).ToList();
+            
 
             return data;
         }
 
-        public Details Get(int id)
+        public DetailsViewModel Get(int id)
         {
-            var data = _context.Details.Find(id);
+            var data = _context.Details.Where(x => x.Id == id).Select(x => new DetailsViewModel
+            {
+                Id = x.Id,
+                ProductId = x.ProductId,
+                MasterId = x.MasterId,
+                Quantity = x.Quantity
+            }).FirstOrDefault();
             return data;
         }
 
