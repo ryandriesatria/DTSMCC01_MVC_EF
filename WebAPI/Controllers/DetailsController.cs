@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var data = _context.Details.ToList();
+            var data = _context.Details.Select(x => new { x.Id, x.ProductId, x.MasterId, x.Quantity }).ToList();
 
             return Ok(new { message = "Sukses mengambil data detail!", StatusCode = 200, data = data });
         }
@@ -31,13 +31,13 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var data = _context.Details.Find(id);
+            var data = _context.Details.Where(x => x.Id == id).Select(x => new { x.Id, x.ProductId, x.MasterId, x.Quantity }).ToList();
 
             return Ok(new { message = "Sukses mengambil data detail!", StatusCode = 200, data = data });
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, Details detail)
+        public IActionResult Put(int id, DetailsViewModel detail)
         {
             var data = _context.Details.Find(id);
             data.MasterId = detail.MasterId;
