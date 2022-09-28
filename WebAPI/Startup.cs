@@ -58,6 +58,7 @@ namespace WebAPI
             services.AddScoped<ProductsRepository>();
             services.AddScoped<MastersRepository>();
             services.AddScoped<DetailsRepository>();
+            services.AddScoped<AccountRepository>();
 
             #endregion Dependency Injection
         }

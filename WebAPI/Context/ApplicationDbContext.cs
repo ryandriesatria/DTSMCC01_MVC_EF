@@ -17,6 +17,13 @@ namespace WebAPI.Context
         public DbSet<Products> Products { get; set; }
         public DbSet<Masters> Masters { get; set; }
         public DbSet<Details> Details{ get; set; }
+        public DbSet<Employee> Employee{ get; set; }
+        public DbSet<User> User{ get; set; }
+        public DbSet<Role> Role{ get; set; }
+        public DbSet<UserRole> UserRole{ get; set; }
+
+
+
 
     }
 }
