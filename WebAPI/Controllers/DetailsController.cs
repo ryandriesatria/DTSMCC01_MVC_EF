@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WebAPI.Context;
 using WebAPI.Models;
 using WebAPI.Models.ViewModels;
+using WebAPI.Repository.Data;
 
 namespace WebAPI.Controllers
 {
@@ -14,16 +15,16 @@ namespace WebAPI.Controllers
     [ApiController]
     public class DetailsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public DetailsController(ApplicationDbContext context)
+        private readonly DetailsRepository _repository;
+        public DetailsController(DetailsRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var data = _context.Details.Select(x => new { x.Id, x.ProductId, x.MasterId, x.Quantity }).ToList();
+            var data = _repository.Get();
 
             return Ok(new { message = "Sukses mengambil data detail!", StatusCode = 200, data = data });
         }
@@ -31,7 +32,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var data = _context.Details.Where(x => x.Id == id).Select(x => new { x.Id, x.ProductId, x.MasterId, x.Quantity }).ToList();
+            var data = _repository.Get(id);
 
             return Ok(new { message = "Sukses mengambil data detail!", StatusCode = 200, data = data });
         }
@@ -39,12 +40,8 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, DetailsViewModel detail)
         {
-            var data = _context.Details.Find(id);
-            data.MasterId = detail.MasterId;
-            data.ProductId = detail.ProductId;
-            data.Quantity = detail.Quantity;
-            _context.Details.Update(data);
-            var result = _context.SaveChanges();
+            var result = _repository.Put(id, detail);
+
             if (result > 0)
             {
                 return Ok(new { message = "Sukses mengubah data detail!", StatusCode = 200 });
@@ -56,15 +53,8 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult Post(DetailsViewModel detail)
         {
-
-            
-            _context.Details.Add(new Details { 
-                Id = detail.Id,
-                ProductId = detail.ProductId,
-                MasterId = detail.MasterId,
-                Quantity = detail.Quantity
-            });
-            var result = _context.SaveChanges();
+            var result = _repository.Post(detail);
+                        
             if (result > 0)
             {
                 return Ok(new { message = "Sukses menambahkan data detail!", StatusCode = 200 });
@@ -76,9 +66,7 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var data = _context.Details.Find(id);
-            _context.Details.Remove(data);
-            var result = _context.SaveChanges();
+            var result = _repository.Delete(id);
             if (result > 0)
             {
                 return Ok(new { message = "Sukses menghapus data detail!", StatusCode = 200 });

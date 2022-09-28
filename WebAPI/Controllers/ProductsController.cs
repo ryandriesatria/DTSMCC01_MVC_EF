@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Context;
 using WebAPI.Models;
+using WebAPI.Repository.Data;
 
 namespace WebAPI.Controllers
 {
@@ -13,16 +14,16 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public ProductsController(ApplicationDbContext context)
+        private readonly ProductsRepository _repository;
+        public ProductsController(ProductsRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var data = _context.Products.ToList();
+            var data = _repository.Get();
 
             return Ok(new { message = "Sukses mengambil data produk!", StatusCode = 200, data = data });
         }
@@ -30,7 +31,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var data = _context.Products.Find(id);
+            var data = _repository.Get(id);
 
             return Ok(new { message = "Sukses mengambil data produk!", StatusCode = 200, data = data });
         }
@@ -38,12 +39,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Products product)
         {
-            var data = _context.Products.Find(id);
-            data.Name = product.Name;
-            data.Price = product.Price;
-            data.Stock = product.Stock;
-            _context.Products.Update(data);
-            var result = _context.SaveChanges();
+            var result = _repository.Put(id, product);
             if(result > 0)
             {
                 return Ok(new { message = "Sukses mengubah data produk!", StatusCode = 200});
@@ -55,8 +51,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult Post(Products product)
         {
-            _context.Products.Add(product);
-            var result = _context.SaveChanges();
+            var result = _repository.Post(product);
             if (result > 0)
             {
                 return Ok(new { message = "Sukses menambahkan data produk!", StatusCode = 200 });
@@ -68,9 +63,7 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var data = _context.Products.Find(id);
-            _context.Products.Remove(data);
-            var result = _context.SaveChanges();
+            var result = _repository.Delete(id);
             if (result > 0)
             {
                 return Ok(new { message = "Sukses menghapus data produk!", StatusCode = 200 });

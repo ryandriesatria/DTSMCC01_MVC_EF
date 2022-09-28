@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Context;
+using WebAPI.Repository.Data;
 
 namespace WebAPI
 {
@@ -51,6 +52,12 @@ namespace WebAPI
                     }
                 });
             });
+
+            #region Dependency Injection
+
+            services.AddScoped<ProductsRepository>();
+
+            #endregion Dependency Injection
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

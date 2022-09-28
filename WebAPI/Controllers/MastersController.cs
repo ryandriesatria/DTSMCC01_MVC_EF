@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Context;
 using WebAPI.Models;
+using WebAPI.Repository.Data;
 
 namespace WebAPI.Controllers
 {
@@ -13,16 +14,16 @@ namespace WebAPI.Controllers
     [ApiController]
     public class MastersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public MastersController(ApplicationDbContext context)
+        private readonly MastersRepository _repository;
+        public MastersController(MastersRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var data = _context.Masters.ToList();
+            var data = _repository.Get();
 
             return Ok(new { message = "Sukses mengambil data master!", StatusCode = 200, data = data });
         }
@@ -30,7 +31,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var data = _context.Masters.Find(id);
+            var data = _repository.Get(id);
 
             return Ok(new { message = "Sukses mengambil data master!", StatusCode = 200, data = data });
         }
@@ -38,10 +39,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Masters master)
         {
-            var data = _context.Masters.Find(id);
-            data.TransactionDate = master.TransactionDate;
-            _context.Masters.Update(data);
-            var result = _context.SaveChanges();
+            var result = _repository.Put(id, master);
             if (result > 0)
             {
                 return Ok(new { message = "Sukses mengubah data master!", StatusCode = 200 });
@@ -53,8 +51,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public IActionResult Post(Masters master)
         {
-            _context.Masters.Add(master);
-            var result = _context.SaveChanges();
+            var result = _repository.Post(master);
             if (result > 0)
             {
                 return Ok(new { message = "Sukses menambahkan data master!", StatusCode = 200 });
@@ -66,9 +63,7 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var data = _context.Masters.Find(id);
-            _context.Masters.Remove(data);
-            var result = _context.SaveChanges();
+            var result = _repository.Delete(id);
             if (result > 0)
             {
                 return Ok(new { message = "Sukses menghapus data master!", StatusCode = 200 });
